@@ -13,15 +13,22 @@ db_config = {
     'database': 'newdb'
 }
 
+
 def funzione_riccardo():
     print("sono Riccardo")
 
+
 def funzione_giorgio():
     print("sono giorgio")
-    
+
+def funzione_giorgio2():
+    print("sono giorgio")
+
+
 # Funzione per creare una connessione al database
 def create_db_connection():
     return mysql.connector.connect(**db_config)
+
 
 # Funzione per eseguire query SQL
 def execute_query(query, params=None):
@@ -46,6 +53,7 @@ def get_data_categories():
     return items
     # return jsonify({'items': items})
 
+
 @app.route('/data/shows', methods=['GET'])
 def get_data_shows():
     query = "SELECT * FROM shows"
@@ -53,12 +61,14 @@ def get_data_shows():
     print("Ciao sono Riccardo")
     return items
 
-#singolo show in base all'id passato
+
+# singolo show in base all'id passato
 @app.route('/data/shows/<int:id>', methods=['GET'])
 def get_singleshows_data(id):
     query = "SELECT * FROM shows WHERE show_id = %s"
     shows = execute_query(query, (id,))
     return jsonify({'shows': shows})
+
 
 @app.route('/data/shows/category/<category_name>', methods=['GET'])
 def get_shows_by_category(category_name):
@@ -71,6 +81,7 @@ def get_shows_by_category(category_name):
     """
     shows = execute_query(query, (category_name,))
     return jsonify({'shows': shows})
+
 
 @app.route('/data/shows/category/id/<category_id>', methods=['GET'])
 def get_shows_by_category_id(category_id):
@@ -85,15 +96,18 @@ def get_shows_by_category_id(category_id):
     return jsonify({'shows': shows})
     # return shows
 
+
 @app.route('/movies')
 def show_movies():
     movies = get_data_shows()
     return render_template('movies.html', movies=movies)
 
+
 @app.route('/categories')
 def show_categories():
     categories = get_data_categories()
     return render_template('categories.html', categories=categories)
+
 
 @app.route('/movies/category/<int:category_id>')
 def show_movies_by_category(category_id):
@@ -106,11 +120,10 @@ def show_movies_by_category(category_id):
     movies = data['shows']
     return render_template('movie_by_category.html', movies=movies)
 
+
 # Funzione per ottenere il nome della categoria
 def get_category_name(category_id):
-
     pass
-
 
 
 @app.route('/')
