@@ -43,6 +43,7 @@ def get_data_categories():
 def get_data_shows():
     query = "SELECT * FROM shows"
     items = execute_query(query)
+    print("Ciao sono Riccardo")
     return items
 
 #singolo show in base all'id passato
