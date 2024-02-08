@@ -18,6 +18,9 @@ def funzione_riccardo():
 
 def funzione_giorgio():
     print("sono giorgio")
+
+def funzione_cris():
+    print("sono cris")
     
 # Funzione per creare una connessione al database
 def create_db_connection():
