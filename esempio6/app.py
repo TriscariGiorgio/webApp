@@ -12,7 +12,9 @@ db_config = {
     'password': '',
     'database': 'newdb'
 }
-
+def funzione_giorgio():
+    print("sono giorgio")
+    
 # Funzione per creare una connessione al database
 def create_db_connection():
     return mysql.connector.connect(**db_config)
