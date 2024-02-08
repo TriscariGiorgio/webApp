@@ -108,6 +108,9 @@ def show_categories():
     categories = get_data_categories()
     return render_template('categories.html', categories=categories)
 
+def riccardo_5():
+    print("lol")
+
 
 @app.route('/movies/category/<int:category_id>')
 def show_movies_by_category(category_id):
