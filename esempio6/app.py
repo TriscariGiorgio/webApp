@@ -12,6 +12,10 @@ db_config = {
     'password': '',
     'database': 'newdb'
 }
+
+def funzione_riccardo():
+    print("sono Riccardo")
+
 def funzione_giorgio():
     print("sono giorgio")
     
