@@ -36,6 +36,7 @@ def execute_query(query, params=None):
 def get_data_categories():
     query = "SELECT * FROM categories"
     items = execute_query(query)
+    print("sono giorgio")
     return items
     # return jsonify({'items': items})
 
