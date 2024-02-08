@@ -114,6 +114,10 @@ def show_categories():
     return render_template('categories.html', categories=categories)
 
 
+def funzione_riccardo():
+    print("sono riccardo")
+
+
 @app.route('/movies/category/<int:category_id>')
 def show_movies_by_category(category_id):
     # Recupera tutti i film associati alla categoria specificata
