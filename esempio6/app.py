@@ -10,7 +10,7 @@ db_config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'newdb'
+    'database': 'museo'
 }
 
 
@@ -36,13 +36,17 @@ def execute_query(query, params=None):
 # Rotte dell'API
 @app.route('/data/opere', methods=['GET'])
 def get_data_opere():
-    query = "SELECT * FROM opere"
+    query = """SELECT o.titolo, o.data, o.tumbnail, a.nome, a.nazionalita 
+            FROM opera o
+            JOIN artista a
+            ON o.id_artista = a.id_artista;
+        """
     items = execute_query(query)
     return items
     # return jsonify({'items': items})
 
 
-@app.route('/data/shows', methods=['GET'])
+@app.route('/data/artisti', methods=['GET'])
 def get_data_artisti():
     query = "SELECT * FROM artista"
     items = execute_query(query)
@@ -50,8 +54,8 @@ def get_data_artisti():
 
 
 # singolo show in base all'id passato
-@app.route('/data/shows/<int:id>', methods=['GET'])
-def get_singleartist_data(id):
+@app.route('/data/artisti/<int:id>', methods=['GET'])
+def get_singleartista_data(id):
     query = "SELECT * FROM artist WHERE id_artista = %s"
     shows = execute_query(query, (id,))
     return jsonify({'shows': shows})
@@ -69,7 +73,7 @@ def get_singleartist_data(id):
 #     return jsonify({'shows': shows})
 
 
-@app.route('/data/shows/category/id/<category_id>', methods=['GET'])
+@app.route('/data/opere/id/<id_artista>', methods=['GET'])
 def get_opera_by_artista_id(category_id):
     query = """
         SELECT o.titolo, o.data, o.tumbnail, a.nome, a.nazionalita 
@@ -85,14 +89,14 @@ def get_opera_by_artista_id(category_id):
 
 @app.route('/opere')
 def show_opere():
-    movies = get_data_opere()
-    return render_template('opere.html', movies=movies)
+    opere = get_data_opere()
+    return render_template('opere.html', opere=opere)
 
 
 @app.route('/artisti')
 def show_artisti():
-    categories = get_data_artisti()
-    return render_template('categories.html', categories=categories)
+    artisti = get_data_artisti()
+    return render_template('artisti.html', artisti=artisti)
 
 
 @app.route('/opere/artisti/<int:id_artista>')
