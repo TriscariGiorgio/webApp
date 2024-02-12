@@ -37,8 +37,7 @@ if __name__ == '__main__':
         reader = csv.reader(f, delimiter=";")
         next(reader)
         reader = list(reader)
-    for x in reader[:2]:
-        print(x)
+
 
     lista_campi_artista = ["name", "nazionalita"]
     lista_artisti = []
@@ -47,7 +46,7 @@ if __name__ == '__main__':
 
     lista_campi_opera=["titolo","thumbnail","anno","nome_artista"]
     lista_opere=[]
-    for i in range(len(reader)):
+    for i in range(100):
         lista_opere.append((reader[i][1], reader[i][4], reader[i][3],reader[i][2]))
 
     inserisci_dati(connection, "artista", lista_artisti, lista_campi_artista)
