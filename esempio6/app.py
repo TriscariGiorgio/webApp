@@ -10,21 +10,14 @@ db_config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'newdb'
+    'database': 'museo'
 }
 
-def funzione_riccardo():
-    print("sono Riccardo")
 
-def funzione_giorgio():
-    print("sono giorgio")
-
-def funzione_cris():
-    print("sono cris")
-    
 # Funzione per creare una connessione al database
 def create_db_connection():
     return mysql.connector.connect(**db_config)
+
 
 # Funzione per eseguire query SQL
 def execute_query(query, params=None):
@@ -41,79 +34,86 @@ def execute_query(query, params=None):
 
 
 # Rotte dell'API
-@app.route('/data/categories', methods=['GET'])
-def get_data_categories():
-    query = "SELECT * FROM categories"
+@app.route('/data/opere', methods=['GET'])
+def get_data_opere():
+    query = """SELECT o.titolo, o.data, o.tumbnail, a.nome, a.nazionalita 
+            FROM opera o
+            JOIN artista a
+            ON o.id_artista = a.id_artista;
+        """
     items = execute_query(query)
-    print("sono giorgio")
     return items
     # return jsonify({'items': items})
 
-@app.route('/data/shows', methods=['GET'])
-def get_data_shows():
-    query = "SELECT * FROM shows"
+
+@app.route('/data/artisti', methods=['GET'])
+def get_data_artisti():
+    query = "SELECT * FROM artista"
     items = execute_query(query)
-    print("Ciao sono Riccardo")
     return items
 
-#singolo show in base all'id passato
-@app.route('/data/shows/<int:id>', methods=['GET'])
-def get_singleshows_data(id):
-    query = "SELECT * FROM shows WHERE show_id = %s"
+
+# singolo show in base all'id passato
+@app.route('/data/artisti/<int:id>', methods=['GET'])
+def get_singleartista_data(id):
+    query = "SELECT * FROM artist WHERE id_artista = %s"
     shows = execute_query(query, (id,))
     return jsonify({'shows': shows})
 
-@app.route('/data/shows/category/<category_name>', methods=['GET'])
-def get_shows_by_category(category_name):
-    query = """
-        SELECT s.*
-        FROM shows s
-        JOIN showcategories sc ON s.show_id = sc.show_id
-        JOIN categories c ON sc.category_id = c.category_id
-        WHERE c.category_name = %s
-    """
-    shows = execute_query(query, (category_name,))
-    return jsonify({'shows': shows})
 
-@app.route('/data/shows/category/id/<category_id>', methods=['GET'])
-def get_shows_by_category_id(category_id):
+# @app.route('/data/shows/category/<category_name>', methods=['GET'])
+# def get_artista_by_opera(category_name):
+#     query = """
+#         SELECT opera.titolo, opera.data, opera.tumbnail, artista.nome, artista.nazionalita
+#         FROM opera
+#         JOIN artista
+#         ON opera.id_artista = artista.id_artista;
+#     """
+#     shows = execute_query(query, (category_name,))
+#     return jsonify({'shows': shows})
+
+
+@app.route('/data/opere/id/<id_artista>', methods=['GET'])
+def get_opera_by_artista_id(category_id):
     query = """
-        SELECT s.*
-        FROM shows s
-        JOIN showcategories sc ON s.show_id = sc.show_id
-        JOIN categories c ON sc.category_id = c.category_id
-        WHERE c.category_id = %s
+        SELECT o.titolo, o.data, o.tumbnail, a.nome, a.nazionalita 
+        FROM opera o
+        JOIN artista a
+        ON o.id_artista = a.id_artista;
+        WHERE a.id_artista = %s
     """
     shows = execute_query(query, (category_id,))
     return jsonify({'shows': shows})
     # return shows
 
-@app.route('/movies')
-def show_movies():
-    movies = get_data_shows()
-    return render_template('movies.html', movies=movies)
 
-@app.route('/categories')
-def show_categories():
-    categories = get_data_categories()
-    return render_template('categories.html', categories=categories)
+@app.route('/opere')
+def show_opere():
+    opere = get_data_opere()
+    return render_template('opere.html', opere=opere)
 
-@app.route('/movies/category/<int:category_id>')
-def show_movies_by_category(category_id):
+
+@app.route('/artisti')
+def show_artisti():
+    artisti = get_data_artisti()
+    return render_template('artisti.html', artisti=artisti)
+
+
+@app.route('/opere/artisti/<int:id_artista>')
+def show_artista_by_opera(category_id):
     # Recupera tutti i film associati alla categoria specificata
-    shows_data_response = get_shows_by_category_id(category_id)
+    shows_data_response = get_opera_by_artista_id(category_id)
     # Carica il contenuto JSON come un dizionario Python
     data = json.loads(shows_data_response.get_data(as_text=True))
 
     # Estrai la lista di show
-    movies = data['shows']
-    return render_template('movie_by_category.html', movies=movies)
+    movies = data['nome']
+    return render_template('tutto.html', movies=movies)
+
 
 # Funzione per ottenere il nome della categoria
 def get_category_name(category_id):
-
     pass
-
 
 
 @app.route('/')
