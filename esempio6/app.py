@@ -36,10 +36,10 @@ def execute_query(query, params=None):
 # Rotte dell'API
 @app.route('/data/opere', methods=['GET'])
 def get_data_opere():
-    query = """SELECT o.titolo, o.data, o.tumbnail, a.nome, a.nazionalita 
-            FROM opera o
-            JOIN artista a
-            ON o.id_artista = a.id_artista;
+    query = """SELECT o.titolo, o.anno, o.thumbnail,o.nome_artista, a.name, a.nazionalita 
+            FROM opera  o
+            JOIN artista  a
+            ON o.nome_artista = a.name;
         """
     items = execute_query(query)
     return items
@@ -56,7 +56,7 @@ def get_data_artisti():
 # singolo show in base all'id passato
 @app.route('/data/artisti/<int:id>', methods=['GET'])
 def get_singleartista_data(id):
-    query = "SELECT * FROM artist WHERE id_artista = %s"
+    query = "SELECT * FROM artista WHERE name = %s"
     shows = execute_query(query, (id,))
     return jsonify({'shows': shows})
 
@@ -76,11 +76,10 @@ def get_singleartista_data(id):
 @app.route('/data/opere/id/<id_artista>', methods=['GET'])
 def get_opera_by_artista_id(category_id):
     query = """
-        SELECT o.titolo, o.data, o.tumbnail, a.nome, a.nazionalita 
+        SELECT o.titolo, o.anno, o.thumbnail, a.name, a.nazionalita 
         FROM opera o
         JOIN artista a
-        ON o.id_artista = a.id_artista;
-        WHERE a.id_artista = %s
+        ON o.nome_artista = a.name;
     """
     shows = execute_query(query, (category_id,))
     return jsonify({'shows': shows})
