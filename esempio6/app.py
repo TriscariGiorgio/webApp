@@ -1,5 +1,5 @@
 import json
-
+from funzioniDB import *
 from flask import Flask, jsonify, render_template
 import mysql.connector
 
