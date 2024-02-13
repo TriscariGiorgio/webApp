@@ -91,6 +91,7 @@ def inserisci_dati(connection, tabella, lista, campi=None):
             connection.commit()
         else:
             esegui_query_many(connection, f"INSERT INTO {tabella}  VALUES ({','.join(['%s'] * len(lista[0]))})", lista)
+            connection.commit()
         print("Query successful")
     except Error as err:
         print(f"Error: '{err}'")
