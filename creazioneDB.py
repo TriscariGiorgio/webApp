@@ -14,40 +14,48 @@ if __name__ == '__main__':
 
     esegui_query(connection, """
         CREATE TABLE IF NOT EXISTS `artista` (
-        `id` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        `id` INT(11) PRIMARY KEY ,
         `name` VARCHAR(255),
         `nazionalita`  VARCHAR(255)
     );
     """)
     esegui_query(connection, """
         CREATE TABLE IF NOT EXISTS `opera` (
-        `id` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        `id` INT(11) PRIMARY KEY AUTO_INCREMENT,
         `titolo` VARCHAR(255),
         `thumbnail`  VARCHAR(255),
         `anno` int(11),
-        `nome_artista` VARCHAR(255)
+        `id_artista` INT(11)
     );
     """)
     esegui_query(connection, """
     ALTER TABLE `opera` 
-      ADD CONSTRAINT `opera_ibfk_1` FOREIGN KEY (`nome_artista`) REFERENCES `artista` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
+      ADD CONSTRAINT `opera_ibfk_1` FOREIGN KEY (`id_artista`) REFERENCES `artista` (`id`);
     """)
+
+    with open(r"C:\webApp\Artisti_pulito.csv", encoding="UTF-8") as f:
+        reader = csv.reader(f, delimiter=";")
+        next(reader)
+        reader = list(reader)
+
+
+    lista_campi_artista = ["id","name", "nazionalita"]
+    lista_artisti = []
+    diz_artisti={}
+    for i in range(len(reader)):
+        lista_artisti.append((i, reader[i][2], reader[i][1]))
+        diz_artisti[reader[i][2]]=i
 
     with open(r"C:\webApp\unione..csv", encoding="UTF-8") as f:
         reader = csv.reader(f, delimiter=";")
         next(reader)
         reader = list(reader)
 
-
-    lista_campi_artista = ["name", "nazionalita"]
-    lista_artisti = []
-    for i in range(len(reader)):
-        lista_artisti.append((reader[i][2], reader[i][5]))
-
-    lista_campi_opera=["titolo","thumbnail","anno","nome_artista"]
+    lista_campi_opera=["titolo","thumbnail","anno","id_artista"]
     lista_opere=[]
     for i in range(100):
-        lista_opere.append((reader[i][1], reader[i][4], reader[i][3],reader[i][2]))
+        lista_opere.append((reader[i][1], reader[i][4], reader[i][3],diz_artisti[reader[i][2]]))
 
-    inserisci_dati(connection, "artista", lista_artisti, lista_campi_artista)
+    inserisci_dati(connection, "artista", lista_artisti)
     inserisci_dati(connection, "opera", lista_opere, lista_campi_opera)
+
